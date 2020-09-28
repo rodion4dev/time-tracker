@@ -9,6 +9,7 @@ verify_ssl = true
 aiohttp = "*"
 aioredis = "*"
 aiomysql = "*"
+typer = "*"
 
 [requires]
 python_version = "3.8"
