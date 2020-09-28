@@ -1,5 +1,9 @@
 """Настройки проекта."""
-import os
+from pydantic import BaseSettings
 
-# Режим отладки приложения
-DEBUG = os.environ.get('DEBUG', default='false').lower() == 'true'
+
+class SettingsStorage(BaseSettings):
+    """Хранилище настроек из переменных окружения и .env файла."""
+
+
+storage = SettingsStorage()
