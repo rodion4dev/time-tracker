@@ -1,3 +1,4 @@
+"""Набор обработчиков HTTP запросов."""
 from aiohttp.web_response import json_response
 from aiohttp.web_routedef import RouteTableDef
 from aiohttp.web_urldispatcher import View
