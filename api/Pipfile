@@ -6,6 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+aiohttp = "*"
+aioredis = "*"
+aiomysql = "*"
 
 [requires]
 python_version = "3.8"
