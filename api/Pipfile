@@ -10,6 +10,8 @@ aiohttp = "*"
 aioredis = "*"
 aiomysql = "*"
 typer = "*"
+pydantic = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
