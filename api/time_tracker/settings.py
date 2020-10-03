@@ -11,8 +11,8 @@ BASE_DIRECTORY_PATH = Path(__file__).absolute().parent.parent
 class _DatabaseSettings(BaseSettings):
     """Настройки баз данных."""
 
-    redis_dsn: RedisDsn
-    mysql_host: Union[str, IPv4Address] = 'localhost'
+    redis_dsn: RedisDsn = 'redis://127.0.0.1:6379/0'
+    mysql_host: Union[str, IPv4Address] = '127.0.0.1'
     mysql_port: PositiveInt = '3306'
     mysql_user: str
     mysql_password: SecretStr
