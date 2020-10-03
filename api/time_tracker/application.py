@@ -2,6 +2,7 @@
 from aiohttp.web_app import Application
 
 from time_tracker import views
+from time_tracker.databases import close_mysql, init_mysql
 from time_tracker.settings import application_settings, database_settings
 
 
@@ -11,5 +12,6 @@ async def create_application() -> Application:
     application['settings'] = application_settings
     application['database_settings'] = database_settings
     application.add_routes(views.routes)
-
+    application.on_startup.append(init_mysql)
+    application.on_cleanup.append(close_mysql)
     return application
