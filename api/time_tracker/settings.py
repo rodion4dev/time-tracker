@@ -8,7 +8,7 @@ from pydantic import BaseSettings, PositiveInt, RedisDsn, SecretStr
 BASE_DIRECTORY_PATH = Path(__file__).absolute().parent.parent
 
 
-class DatabaseSettings(BaseSettings):
+class _DatabaseSettings(BaseSettings):
     """Настройки баз данных."""
 
     redis_dsn: RedisDsn
@@ -25,7 +25,7 @@ class DatabaseSettings(BaseSettings):
         env_file_encoding = 'utf-8'
 
 
-class ApplicationSettings(BaseSettings):
+class _ApplicationSettings(BaseSettings):
     """Прочие настройки приложения."""
 
     class Config:
@@ -35,4 +35,4 @@ class ApplicationSettings(BaseSettings):
         env_file_encoding = 'utf-8'
 
 
-database_settings, application_settings = DatabaseSettings(), ApplicationSettings()
+database_settings, application_settings = _DatabaseSettings(), _ApplicationSettings()
