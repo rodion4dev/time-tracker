@@ -12,8 +12,10 @@ async def create_application() -> Application:
     application['settings'] = application_settings
     application['database_settings'] = database_settings
     application.add_routes(views.routes)
+
     application.on_startup.append(init_mysql)
     application.on_cleanup.append(close_mysql)
     application.on_startup.append(init_redis)
     application.on_cleanup.append(close_redis)
+
     return application
