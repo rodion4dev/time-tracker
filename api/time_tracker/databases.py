@@ -1,7 +1,6 @@
 """Модуль БД."""
 import aiomysql
 from aiohttp.web_app import Application
-from aiomysql import Connection
 
 from time_tracker.settings import _DatabaseSettings
 
@@ -9,11 +8,12 @@ from time_tracker.settings import _DatabaseSettings
 async def init_mysql(application: Application):
     """Подготовка MySQL базы данных."""
     settings: _DatabaseSettings = application['database_settings']
-    application['mysql_connection']: Connection = await aiomysql.connect()
+    connections_pool: aiomysql.Pool = await aiomysql.create_pool()
+    application['mysql_connections_pool'] = connections_pool
 
 
 async def close_mysql(application: Application):
     """Закрытие соединения с MySQL базой данных."""
-    mysql_connection: Connection = application['mysql_connection']
-    mysql_connection.close()
-    await mysql_connection.ensure_closed()
+    connections_pool: aiomysql.Pool = application['mysql_connections_pool']
+    connections_pool.close()
+    await connections_pool.wait_closed()
