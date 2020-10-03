@@ -1,7 +1,7 @@
 """Настройки проекта."""
 from ipaddress import IPv4Address
 from pathlib import Path
-from typing import Union
+from typing import Tuple, Union
 
 from pydantic import BaseSettings, PositiveInt, RedisDsn, SecretStr
 
@@ -17,6 +17,7 @@ class _DatabaseSettings(BaseSettings):
     mysql_user: str
     mysql_password: SecretStr
     mysql_database: str
+    mysql_connections_count: Tuple[PositiveInt, PositiveInt] = (1, 3)
 
     class Config:
         """Мета конфигурация настроек."""
