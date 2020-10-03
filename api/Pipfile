@@ -12,6 +12,7 @@ aiomysql = "*"
 typer = "*"
 pydantic = "*"
 python-dotenv = "*"
+aiohttp-cors = "*"
 
 [requires]
 python_version = "3.8"

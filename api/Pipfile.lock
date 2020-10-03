@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "485c2b46d4142608e670fdda67120548c3b74bb58eaa1966d8e29292254aea38"
+            "sha256": "c3e18abc948daac0c2cfcf6fe84474b0b1e0e2c4961a680b39356be4ec8d648a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -33,6 +33,14 @@
             ],
             "index": "pypi",
             "version": "==3.6.2"
+        },
+        "aiohttp-cors": {
+            "hashes": [
+                "sha256:0451ba59fdf6909d0e2cd21e4c0a43752bc0703d33fc78ae94d9d9321710193e",
+                "sha256:4d39c6d7100fd9764ed1caf8cebf0eb01bf5e3f24e2e073fda6234bc48b19f5d"
+            ],
+            "index": "pypi",
+            "version": "==0.7.0"
         },
         "aiomysql": {
             "hashes": [
@@ -284,7 +292,7 @@
                 "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259",
                 "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.15.0"
         },
         "typer": {
