@@ -22,3 +22,11 @@ async def close_mysql(application: Application):
     connections_pool: aiomysql.Pool = application['mysql_connections_pool']
     connections_pool.close()
     await connections_pool.wait_closed()
+
+
+async def init_redis(application: Application):
+    """Подготовка Redis."""
+
+
+async def close_redis(application: Application):
+    """Подготовка Redis."""
