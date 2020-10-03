@@ -38,11 +38,11 @@ async def init_redis(application: Application):
     redis: aioredis.Redis = await aioredis.create_redis_pool(
         settings.redis_dsn, encoding='utf-8', minsize=minsize, maxsize=maxsize
     )
-    application['redis_pool'] = redis
+    application['redis'] = redis
 
 
 async def close_redis(application: Application):
     """Закрытие соединений Redis."""
-    redis: aioredis.Redis = application['redis_pool']
+    redis: aioredis.Redis = application['redis']
     redis.close()
     await redis.wait_closed()
