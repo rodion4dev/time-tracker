@@ -1,10 +1,15 @@
 version: '3.7'
 services:
-  file-database:
+  database-1:
     image: mysql:8.0.21
+    environment:
+      MYSQL_ROOT_PASSWORD: secretroot
+      MYSQL_DATABASE: timetracker
+      MYSQL_USER: ttuser
+      MYSQL_PASSWORD: ttpassword
     ports:
       - 3306:3306
-  memory-database:
-    image: 6.0.8-alpine3.12
+  database-2:
+    image: redis:6.0.8-alpine3.12
     ports:
       - 6379:6379
