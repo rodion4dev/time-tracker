@@ -12,12 +12,13 @@ class _DatabaseSettings(BaseSettings):
     """Настройки баз данных."""
 
     redis_dsn: RedisDsn = 'redis://127.0.0.1:6379/0'
+    redis_connections_count: Tuple[PositiveInt, PositiveInt] = (1, 10)
     mysql_host: Union[str, IPv4Address] = '127.0.0.1'
     mysql_port: PositiveInt = '3306'
     mysql_user: str
     mysql_password: SecretStr
     mysql_database: str
-    mysql_connections_count: Tuple[PositiveInt, PositiveInt] = (1, 3)
+    mysql_connections_count: Tuple[PositiveInt, PositiveInt] = (1, 10)
 
     class Config:
         """Мета конфигурация настроек."""
