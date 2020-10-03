@@ -27,14 +27,4 @@ class _DatabaseSettings(BaseSettings):
         env_file_encoding = 'utf-8'
 
 
-class _ApplicationSettings(BaseSettings):
-    """Прочие настройки приложения."""
-
-    class Config:
-        """Мета конфигурация настроек."""
-
-        env_file = str(BASE_DIRECTORY_PATH / '.env')
-        env_file_encoding = 'utf-8'
-
-
-database_settings, application_settings = _DatabaseSettings(), _ApplicationSettings()
+database_settings = _DatabaseSettings()

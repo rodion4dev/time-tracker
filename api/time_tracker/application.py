@@ -5,13 +5,12 @@ from aiohttp.web_app import Application
 from time_tracker import views
 from time_tracker.databases import close_mysql, close_redis, init_mysql, init_redis
 from time_tracker.middlewares import setup_middlewares
-from time_tracker.settings import application_settings, database_settings
+from time_tracker.settings import database_settings
 
 
 async def create_application() -> Application:
     """Создание WEB приложения."""
     application = Application()
-    application['settings'] = application_settings
     application['database_settings'] = database_settings
 
     cors_options = aiohttp_cors.ResourceOptions(expose_headers='*', allow_headers='*')
