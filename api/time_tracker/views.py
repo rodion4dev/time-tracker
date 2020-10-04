@@ -37,7 +37,7 @@ class MySQLData(View):
 
 @routes.view('/redis-data')
 class RedisData(View):
-    """Взаимодействие с данными в Redis базе."""
+    """Обработка Redis данных."""
 
     async def get(self) -> Response:
         """Получение всех данных из Redis."""
