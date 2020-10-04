@@ -56,4 +56,4 @@ class RedisData(View):
         redis: Redis = self.request.app['redis']
         for key, value in data.items():
             redis.set(key, value, exist=StringCommandsMixin.SET_IF_NOT_EXIST)
-        return json_response(data={})
+        return json_response(data=data)
