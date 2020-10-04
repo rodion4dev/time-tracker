@@ -11,7 +11,7 @@ BASE_DIRECTORY_PATH = Path(__file__).absolute().parent.parent
 class ApplicationSettings(BaseSettings):
     """Настройки приложения."""
 
-    log_file_path: Path = BASE_DIRECTORY_PATH / 'logs.json'
+    log_file_path: Path = BASE_DIRECTORY_PATH / 'log.json'
 
     class Config:
         """Конфигурация настроек."""
