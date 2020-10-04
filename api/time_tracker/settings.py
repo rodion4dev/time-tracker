@@ -8,7 +8,19 @@ from pydantic import BaseSettings, PositiveInt, RedisDsn, SecretStr
 BASE_DIRECTORY_PATH = Path(__file__).absolute().parent.parent
 
 
-class _DatabaseSettings(BaseSettings):
+class ApplicationSettings(BaseSettings):
+    """Настройки приложения."""
+
+    log_file_path: Path = BASE_DIRECTORY_PATH / 'logs.json'
+
+    class Config:
+        """Конфигурация настроек."""
+
+        env_file = str(BASE_DIRECTORY_PATH / '.application.env')
+        env_file_encoding = 'utf-8'
+
+
+class DatabaseSettings(BaseSettings):
     """Настройки баз данных."""
 
     redis_dsn: RedisDsn = 'redis://127.0.0.1:6379/0'
@@ -21,10 +33,10 @@ class _DatabaseSettings(BaseSettings):
     mysql_connections_count: Tuple[PositiveInt, PositiveInt] = (1, 10)
 
     class Config:
-        """Мета конфигурация настроек."""
+        """Конфигурация настроек."""
 
         env_file = str(BASE_DIRECTORY_PATH / '.database.env')
         env_file_encoding = 'utf-8'
 
 
-database_settings = _DatabaseSettings()
+database_settings, application_settings = DatabaseSettings(), ApplicationSettings()

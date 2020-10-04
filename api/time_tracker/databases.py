@@ -3,12 +3,12 @@ import aiomysql
 import aioredis
 from aiohttp.web_app import Application
 
-from time_tracker.settings import _DatabaseSettings
+from time_tracker.settings import DatabaseSettings
 
 
 async def init_mysql(application: Application):
     """Подготовка MySQL."""
-    settings: _DatabaseSettings = application['database_settings']
+    settings: DatabaseSettings = application['database_settings']
     minsize, maxsize = settings.mysql_connections_count
     mysql_pool: aiomysql.Pool = await aiomysql.create_pool(
         minsize=minsize,
@@ -33,7 +33,7 @@ async def close_mysql(application: Application):
 
 async def init_redis(application: Application):
     """Подготовка Redis."""
-    settings: _DatabaseSettings = application['database_settings']
+    settings: DatabaseSettings = application['database_settings']
     minsize, maxsize = settings.redis_connections_count
     redis: aioredis.Redis = await aioredis.create_redis_pool(
         settings.redis_dsn, encoding='utf-8', minsize=minsize, maxsize=maxsize
