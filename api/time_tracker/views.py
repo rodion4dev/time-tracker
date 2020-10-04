@@ -13,7 +13,7 @@ routes = RouteTableDef()
 
 @routes.view('/logs')
 class LogView(View):
-    """Взаимодействие с логами."""
+    """Обработка файла логирования."""
 
     async def get(self) -> Response:
         """Получение логов."""
@@ -23,8 +23,8 @@ class LogView(View):
 
 
 @routes.view('/mysql-data')
-class MySQLData(View):
-    """Взаимодействие с данными в MySQL базе."""
+class MySQLDataView(View):
+    """Обработка данных MySQL."""
 
     async def get(self) -> Response:
         """Получение данных из MySQL."""
@@ -36,7 +36,7 @@ class MySQLData(View):
 
 
 @routes.view('/redis-data')
-class RedisData(View):
+class RedisDataView(View):
     """Обработка Redis данных."""
 
     async def get(self) -> Response:
