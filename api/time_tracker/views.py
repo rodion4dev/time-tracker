@@ -5,7 +5,7 @@ from pathlib import Path
 from aiohttp.web_response import Response, json_response
 from aiohttp.web_routedef import RouteTableDef
 from aiohttp.web_urldispatcher import View
-
+from aioredis import Redis
 
 routes = RouteTableDef()
 
@@ -39,8 +39,12 @@ class RedisData(View):
     """Взаимодействие с данными в Redis базе."""
 
     async def get(self) -> Response:
-        """Получение данных из Redis."""
-        return json_response(data={})
+        """Получение всех данных из Redis."""
+        redis: Redis = self.request.app['redis']
+        all_data = {}
+        for key in await redis.keys('*'):
+            all_data[key] = await redis.get(key)
+        return json_response(data=all_data)
 
     async def post(self) -> Response:
         """Сохранение данных в Redis."""
