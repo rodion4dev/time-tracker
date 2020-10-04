@@ -1,4 +1,7 @@
 """Набор обработчиков HTTP запросов."""
+import json
+from pathlib import Path
+
 from aiohttp.web_response import Response, json_response
 from aiohttp.web_routedef import RouteTableDef
 from aiohttp.web_urldispatcher import View
@@ -13,7 +16,9 @@ class LogView(View):
 
     async def get(self) -> Response:
         """Получение логов."""
-        return json_response(data={})
+        log_file_path: Path = self.request.app['settings'].log_file_path
+        with log_file_path.open(encoding='utf-8') as logs_file:
+            return json_response(data=json.load(logs_file))
 
 
 @routes.view('/mysql-data')
