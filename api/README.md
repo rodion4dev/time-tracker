@@ -15,3 +15,28 @@
 * MYSQL_PASSWORD: Пароль пользователя для соединения с базой данных
 * MYSQL_DATABASE: Имя базы данных
 * MYSQL_CONNECTIONS_COUNT: Количество допустимых соединений с MySQL (по-умолчанию: [1,10])
+
+## Запуск приложения (на основе aiohttp)
+
+Для разработки:
+```shell script
+python3 -m time_tracker
+```
+
+Для развёртывания в боевом окружении:
+```shell script
+python3 -m time_tracker --socket_path <путь до unix-сокета>
+```
+Подробнее про развёртывание: https://docs.aiohttp.org/en/stable/deployment.html#nginx-supervisord
+
+## Доступные рабочие запросы:
+
+* GET /redis-data/{key}: получение Redis данных по ключу key
+* POST /redis-data: сохранение данных в Redis
+  * Тело запроса
+    ```json
+    {
+      "key": "ключ",
+      "value": "значение ключа"
+    }
+    ```
