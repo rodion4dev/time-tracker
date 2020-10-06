@@ -51,13 +51,22 @@ async def get_redis_data(request: Request) -> Response:
     return json_response(data=dict(redis_data))
 
 
-@routes.post('/redis-data')
-async def create_redis_data(request: Request) -> Response:
-    """Сохранение данных в Redis."""
-    try:
-        redis_data: RedisData = RedisData.parse_raw(await request.text())
-    except ValidationError as error:
-        return json_response(data={'errors': error.errors()}, status=BAD_REQUEST.value)
+@routes.view('/redis-data')
+class RedisDataView(View):
+    """Взаимодействие с RedisData."""
 
-    await redis_data.save(request.app['redis'])
-    return json_response(data=dict(redis_data))
+    async def get(self) -> Response:
+        """Получение всех данных из Redis."""
+        data = [dict(redis_data) for redis_data
+                in await RedisData.get_all(self.request.app['redis'])]
+        return json_response(data=data)
+
+    async def post(self) -> Response:
+        """Сохранение данных в Redis."""
+        try:
+            redis_data: RedisData = RedisData.parse_raw(await self.request.text())
+        except ValidationError as error:
+            return json_response(data={'errors': error.errors()}, status=BAD_REQUEST.value)
+
+        await redis_data.save(self.request.app['redis'])
+        return json_response(data=dict(redis_data))

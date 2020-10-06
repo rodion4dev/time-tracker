@@ -1,6 +1,6 @@
 """Модели проекта."""
 from abc import ABC, abstractmethod
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Union
 
 import aiomysql
 from aioredis import Redis
@@ -26,6 +26,11 @@ class Manager(ABC):
         """Получение объекта по указанному ключу."""
         raise NotImplementedError('Метод не реализован.')
 
+    @abstractmethod
+    async def get_all(self) -> List['Model']:
+        """Получение всех данных из базы."""
+        raise NotImplementedError('Метод не реализован.')
+
 
 class RedisManager(Manager):
     """Менеджер данных Redis."""
@@ -47,6 +52,14 @@ class RedisManager(Manager):
         if value:
             return RedisData(key=key, value=value)
 
+    async def get_all(self) -> List['RedisData']:
+        """Получение всех данных из базы."""
+        redis_data_list = []
+        for key in await self.database.keys('*'):
+            value = await self.database.get(key)
+            redis_data_list.append(RedisData(key=key, value=value))
+        return redis_data_list
+
 
 class MySQLManager(Manager):
     """Менеджер данных MySQL."""
@@ -67,6 +80,12 @@ class Model(BaseModel, ABC):
         """Получение данных из указанной базы."""
         manager = Model.get_manager(database)
         return await manager.get(key)
+
+    @staticmethod
+    async def get_all(database: Union[Redis, aiomysql.Pool]):
+        """Получение всех данных из указанной базы."""
+        manager = Model.get_manager(database)
+        return await manager.get_all()
 
     @staticmethod
     def get_manager(database: Union[Redis, aiomysql.Pool]) -> Manager:
