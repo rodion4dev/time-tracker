@@ -1,6 +1,9 @@
 """Middlewares."""
+import json
+from json import JSONDecodeError
 from logging import getLogger
-from typing import Awaitable, Callable, Dict
+from pathlib import Path
+from typing import Any, Awaitable, Callable, Dict, List
 
 from aiohttp.web_app import Application
 from aiohttp.web_exceptions import HTTPException
@@ -49,7 +52,33 @@ def _create_error_middleware(overrides: Dict[int, Callable]) -> Middleware:
     return error_middleware
 
 
+@middleware
+async def _log_request(request: Request, handler: Handler) -> StreamResponse:
+    response = await handler(request)
+    log_file_path: Path = request.app['settings'].log_file_path
+    with log_file_path.open(encoding='utf-8') as logs_file:
+        logs: Dict[str, List[Dict[str, Any]]] = json.load(logs_file)
+        try:
+            data = await request.json()
+        except JSONDecodeError:
+            data = None
+        logs['items'].append(
+            {
+                'response': {'code': response.status},
+                'request': {
+                    'data': data,
+                    'method': request.method,
+                    'path': request.path,
+                },
+            }
+        )
+    with log_file_path.open(mode='w', encoding='utf-8') as logs_file:
+        json.dump(logs, logs_file)
+    return response
+
+
 def setup_middlewares(application: Application):
     """Добавление middlewares для указанного приложения."""
     error_middleware = _create_error_middleware({500: _notify_server_errors})
     application.middlewares.append(error_middleware)
+    application.middlewares.append(_log_request)
