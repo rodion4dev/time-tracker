@@ -57,8 +57,8 @@ class RedisDataView(View):
 
     async def get(self) -> Response:
         """Получение всех данных из Redis."""
-        data = [dict(redis_data) for redis_data
-                in await RedisData.get_all(self.request.app['redis'])]
+        redis_data_list = await RedisData.get_all(self.request.app['redis'])
+        data = [dict(redis_data) for redis_data in redis_data_list]
         return json_response(data=data)
 
     async def post(self) -> Response:
@@ -66,7 +66,9 @@ class RedisDataView(View):
         try:
             redis_data: RedisData = RedisData.parse_raw(await self.request.text())
         except ValidationError as error:
-            return json_response(data={'errors': error.errors()}, status=BAD_REQUEST.value)
+            return json_response(
+                data={'errors': error.errors()}, status=BAD_REQUEST.value
+            )
 
         await redis_data.save(self.request.app['redis'])
         return json_response(data=dict(redis_data))
