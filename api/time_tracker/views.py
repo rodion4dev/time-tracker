@@ -1,18 +1,21 @@
 """Набор обработчиков HTTP запросов."""
 import json
+from http.client import BAD_REQUEST, NOT_FOUND
 from pathlib import Path
 
+from aiohttp.web_request import Request
 from aiohttp.web_response import Response, json_response
 from aiohttp.web_routedef import RouteTableDef
 from aiohttp.web_urldispatcher import View
-from aioredis import Redis
-from aioredis.commands import StringCommandsMixin
+from pydantic import ValidationError
+
+from time_tracker.models import RedisData
 
 routes = RouteTableDef()
 
 
 @routes.view('/logs')
-class LogView(View):
+class LogDataView(View):
     """Обработка файла логирования."""
 
     async def get(self) -> Response:
@@ -35,25 +38,26 @@ class MySQLDataView(View):
         return json_response(data={})
 
 
-@routes.view('/redis-data')
-class RedisDataView(View):
-    """Обработка Redis данных."""
+@routes.get('/redis-data/{key}')
+async def get_redis_data(request: Request) -> Response:
+    """Получение всех данных из Redis."""
+    key = request.match_info['key']
+    redis_data = await RedisData.get(key, request.app['redis'])
+    if not redis_data:
+        return json_response(
+            data={'errors': [f'Объект с ключом {key} не найден.']},
+            status=NOT_FOUND.value,
+        )
+    return json_response(data=dict(redis_data))
 
-    async def get(self) -> Response:
-        """Получение всех данных из Redis."""
-        redis: Redis = self.request.app['redis']
-        all_data = {}
-        for key in await redis.keys('*'):
-            all_data[key] = await redis.get(key)
-        return json_response(data=all_data)
 
-    async def post(self) -> Response:
-        """Сохранение данных в Redis."""
-        data = await self.request.json()
-        if not isinstance(data, dict):
-            return json_response(data={'error': 'Ожидался объект с данными.'})
+@routes.post('/redis-data')
+async def create_redis_data(request: Request) -> Response:
+    """Сохранение данных в Redis."""
+    try:
+        redis_data: RedisData = RedisData.parse_raw(await request.text())
+    except ValidationError as error:
+        return json_response(data={'errors': error.errors()}, status=BAD_REQUEST.value)
 
-        redis: Redis = self.request.app['redis']
-        for key, value in data.items():
-            await redis.set(key, value, exist=StringCommandsMixin.SET_IF_NOT_EXIST)
-        return json_response(data=data)
+    await redis_data.save(request.app['redis'])
+    return json_response(data=dict(redis_data))

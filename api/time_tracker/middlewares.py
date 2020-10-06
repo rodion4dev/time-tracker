@@ -41,9 +41,11 @@ def _create_error_middleware(overrides: Dict[int, Callable]) -> Middleware:
         except Exception as unknown_error:
             getLogger(__name__).error(
                 f'При обработке запроса {request.method} {request.path} произошла '
-                f'неизвестная ошибка: {unknown_error}')
+                f'неизвестная ошибка: {unknown_error}'
+            )
             override = overrides.get(500)
             return await override(request)
+
     return error_middleware
 
 
